@@ -9,6 +9,7 @@ var GITHUB_CLIENT_ID = "sekunovsky"
 var GITHUB_CLIENT_SECRET = "skjda";
 
 passport.serializeUser(function(user, done) {
+  console.log('user')
   done(null, user);
 });
 
@@ -46,7 +47,7 @@ var allowCrossDomain = function(req, res, next) {
   }
 };
 
-app.use(express.logger());
+// app.use(express.loggers());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -57,9 +58,19 @@ app.use(passport.session());
 app.use(allowCrossDomain);
 app.use(express.static(path.join(__dirname, './../app' ) ) );
 app.use(app.router);
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+
+
+app.get('/login', function(req, res){
+  console.log('/login')
+  res.send('hello world')
 });
+
+app.get('/auth/github',
+  passport.authenticate('github'), function(req, res) {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    console.log('authenticated')
+  });
 
 app.get('/auth/github/callback', 
   passport.authenticate('github', { failureRedirect: '/login' }),
