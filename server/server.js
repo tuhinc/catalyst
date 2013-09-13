@@ -1,6 +1,33 @@
-var express = require('express'),
-  http = require('http'),
-  path = require('path');
+var express = require('express')
+  , http = require('http')
+  , path = require('path')
+  , passport = require('passport')
+  , util = require('util')
+  , GitHubStrategy = require('passport-github').Strategy;
+
+var GITHUB_CLIENT_ID = "sekunovsky"
+var GITHUB_CLIENT_SECRET = "skjda";
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+passport.use(new GitHubStrategy({
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+      
+      return done(null, profile);
+    });
+  }
+));
 
 var app = express();
 
@@ -20,11 +47,39 @@ var allowCrossDomain = function(req, res, next) {
 };
 
 app.use(express.logger());
+app.use(express.cookieParser());
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.session({ secret: 'keyboard cat' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(allowCrossDomain);
 app.use(express.static(path.join(__dirname, './../app' ) ) );
 app.use(app.router);
 app.get('/', function(req, res){
-  res.send('hello world');
+  res.render('index', { user: req.user });
+});
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
 });
 
 app.listen(3000);
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  console.log('ensured')
+  res.redirect('/login')
+}
+
+
+
+
