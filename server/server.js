@@ -1,5 +1,6 @@
 var express = require('express'),
   http = require('http'),
+  io = require('socket.io'),
   path = require('path');
 
 var app = express();

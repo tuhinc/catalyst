@@ -7,6 +7,10 @@ angular.module('catalystApp', [])
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/doorbell', {
+        templateUrl: 'views/doorbell.html',
+        controller: 'DoorbellCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
