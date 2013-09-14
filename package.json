@@ -2,7 +2,8 @@
   "name": "catalyst",
   "version": "0.0.0",
   "dependencies": {
-    "express": "3.x"
+    "express": "3.x",
+    "socket.io": "~0.9.14"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
