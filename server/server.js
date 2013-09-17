@@ -5,11 +5,10 @@ var express = require('express')
   , util = require('util')
   , GitHubStrategy = require('passport-github').Strategy;
 
-var GITHUB_CLIENT_ID = "sekunovsky"
-var GITHUB_CLIENT_SECRET = "skjda";
+var GITHUB_CLIENT_ID = "06db21283a3d0a6bc167"
+var GITHUB_CLIENT_SECRET = "5b7486baa960a0e3bb1c76bdf5479f54407d0825";
 
 passport.serializeUser(function(user, done) {
-  console.log('user')
   done(null, user);
 });
 
@@ -47,7 +46,6 @@ var allowCrossDomain = function(req, res, next) {
   }
 };
 
-// app.use(express.loggers());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -59,27 +57,26 @@ app.use(allowCrossDomain);
 app.use(express.static(path.join(__dirname, './../app' ) ) );
 app.use(app.router);
 
-
-app.get('/login', function(req, res){
-  console.log('/login')
-  res.send('hello world')
-});
-
 app.get('/auth/github',
   passport.authenticate('github'), function(req, res) {
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
     console.log('authenticated')
+    res.redirect('/');
   });
 
 app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/login' }),
+  passport.authenticate('github', { failureRedirect: '/fail' }),
   function(req, res) {
+    console.log(res.req.user.username)
     res.redirect('/');
   });
 
 app.get('/logout', function(req, res){
+  // Invoking logout() will remove the req.user property and clear the login session
+  console.log(req.user)
   req.logout();
+  console.log(req.user)
   res.redirect('/');
 });
 
