@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('catalystApp', [])
+var app = angular.module('catalystApp', [])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
