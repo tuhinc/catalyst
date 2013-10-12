@@ -1,5 +1,6 @@
 var express = require('express')
   , http = require('http')
+  , io = require('socket.io')
   , path = require('path')
   , passport = require('passport')
   , util = require('util')
@@ -11,6 +12,8 @@ var GITHUB_CLIENT_SECRET = "5b7486baa960a0e3bb1c76bdf5479f54407d0825";
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
+
+console.log(io);
 
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
