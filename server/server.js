@@ -4,7 +4,8 @@ var express = require('express')
   , path = require('path')
   , passport = require('passport')
   , util = require('util')
-  , GitHubStrategy = require('passport-github').Strategy;
+  , GitHubStrategy = require('passport-github').Strategy
+  , AWS = require('aws-sdk');
 
 var GITHUB_CLIENT_ID = "06db21283a3d0a6bc167"
 var GITHUB_CLIENT_SECRET = "5b7486baa960a0e3bb1c76bdf5479f54407d0825";
@@ -91,6 +92,33 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login')
 }
 
+
+
+/**
+ * Don't hard-code your credentials!
+ * Load them from disk or your environment instead.
+ */
+AWS.config.update({accessKeyId: 'AKIAILTJTOPGDX7QCCTQ', secretAccessKey: '7IYSklJlA3VbzmUo1nkGkgccFMjfKENMuQXw2WQm'});
+
+// Instead, do this:
+// AWS.config.loadFromPath('./path/to/credentials.json');
+
+// Set your region for future requests.
+AWS.config.update({region: 'us-west-1'});
+
+// Create a bucket using bound parameters and put something in it.
+// Make sure to change the bucket name from "myBucket" to something unique.
+var s3bucket = new AWS.S3({params: {Bucket: 'hrcatalyst'}});
+s3bucket.createBucket(function() {
+  var data = {Key: 'myKey', Body: 'Hello!'};
+  s3bucket.putObject(data, function(err, data) {
+    if (err) {
+      console.log("Error uploading data: ", err);
+    } else {
+      console.log("Successfully uploaded data to myBucket/myKey");
+    }
+  });
+});
 
 
 
