@@ -22,8 +22,8 @@ passport.use(new GitHubStrategy({
     callbackURL: "http://127.0.0.1:3000/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
+    console.log('skldjas')
     process.nextTick(function () {
-      
       return done(null, profile);
     });
   }
@@ -49,9 +49,9 @@ var allowCrossDomain = function(req, res, next) {
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.session({ secret: 'keyboard cat' }));
+// app.use(express.session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use(allowCrossDomain);
 app.use(express.static(path.join(__dirname, './../app' ) ) );
