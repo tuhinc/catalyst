@@ -83,7 +83,11 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.listen(3000);
+
+// TODO :: port should not be hardcoded
+app.io = io.listen( http.createServer(app).listen(3000, function() {
+    console.log( 'Express server listening on ' + 3000);
+}));
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
