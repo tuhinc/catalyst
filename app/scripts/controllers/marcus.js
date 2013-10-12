@@ -2,7 +2,7 @@
 
 angular.module('catalystApp')
   .controller('MarcusCtrl', function ($scope) {
-    $scope.loadQuestions(value){
+    $scope.loadQuestions = function(value){
       console.log(value);
     }
   });
